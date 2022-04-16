@@ -2,6 +2,7 @@ package guipackage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.*;
 
 public class Algorithm {
     //Vars responsible for instruction interpretation
@@ -46,6 +47,25 @@ public class Algorithm {
      */
     public void execInstr(String arg) {
         System.out.println("Test");
+        //0: process num, 1: command, 2: if start, declare size
+        String[] temp = arg.split(" ");
+        //Read proc number
+        int proc = Integer.parseInt(String.valueOf(temp[0].charAt(1)));
+        //Interpret either start/end command
+        if(temp[1].equals("start")) {
+            //Start procedure
+            System.out.println("START");
+            //Turn temp[2] into int
+            int size = Integer.parseInt(temp[2]);
+            System.out.println(size);
+        } else if(temp[1].equals("end")) {
+            System.out.println("END");
+            //End Procedure
+        } else {
+            //Throw error
+            System.out.println("Error: Invalid Arg");
+        }
+        
     }
     //Calls execInstr until at end of buffer
     public void autoRunListener() {
@@ -60,6 +80,7 @@ public class Algorithm {
     public static void main(String args[]) {
         Algorithm algo = new Algorithm();
         algo.readInstr();
+        algo.execInstr("P1 start 400");
     }
 
 
