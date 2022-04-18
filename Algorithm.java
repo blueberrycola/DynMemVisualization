@@ -9,13 +9,29 @@ public class Algorithm {
     String algos[] = {"First-Fit", "Best-Fit", "Worst-Fit"};
     String buffer[] = new String[128];
     int instrSize = 0; //Behaves like length() function (index + 1)
-    int memorySize = 0;
+    String algorithm = ""; //Name of algorithm
     String path = "C:\\Users\\chase-pc\\Documents\\GitHub\\javaDynMemGUI\\src\\main\\java\\guipackage\\";
     //Supports up to 16 processes for a single image of memory
-    int partitionbuffer[] = new int[16];
+    
+
+    int partitionbuffer[][] = new int[16][2];    //Data of each process. second dimension is used for if process now free or active (0, 1)
+    int memorySize = 0;
+    int width = 0;
+    int lastIndex = 0; //Not last number of partition but last available space in memory
+    //Used to store data for free and allocated tables in gui
+    String[][] allocTable = new String[16][2];
+    String[][] freeTable = new String[16][2];
+        
+
+    
+
+    public void setAlgo(String a) {
+        this.algorithm = a;
+    }
+    
     /***
      *  Void function responsible for loading instructions from txt file
-     *  into string buffer to be tokenized later. FIXME: pwd + instructions
+     *  into string buffer to be split later. FIXME: pwd + instructions
      *  instead of hard coding path
      */
     public void readInstr() {
@@ -25,7 +41,8 @@ public class Algorithm {
             int i = 1;
             reader = new BufferedReader(new FileReader(path));
             String line = reader.readLine();
-            buffer[0] = line;
+            buffer[0] = line; //
+            
             while(line != null) {
                 line = reader.readLine();
                 buffer[i] = line;
@@ -75,6 +92,7 @@ public class Algorithm {
     public void stepListener() {
         System.out.println("Step Test");
     }
+    
 
 
     public static void main(String args[]) {
