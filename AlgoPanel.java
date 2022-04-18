@@ -1,35 +1,50 @@
 package guipackage;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.border.Border;
 import java.awt.*;
-
-/**
- *
- * @author chase-pc
- */
 public class AlgoPanel extends JPanel {
-    private boolean[] free = new boolean[16];
-    private ImageIcon fill, memMap;
-    private JLabel fillLabel;
-    //Set state and images
+    JLabel displayField[] = new JLabel[38];
+    ImageIcon colors[] = new ImageIcon[17]; //16 Processes + Possiblility of free
+    int pxLeng = 210;
+    int pxWidth = 587;
     public AlgoPanel() {
-        fill = new ImageIcon("fill.png");
-        memMap = new ImageIcon("memMap.png");
-        setBackground(Color.GRAY);
-        fillLabel = new JLabel("This is a test");
-        add(fillLabel);
-    }
-    @Override
-    public void paintComponent(Graphics page) {
-        super.paintComponent(page);
-        //Add memory map image to panel
-        fillLabel.setIcon(memMap);
+        //Setup Panel Layout. Images stack top to bottom
+        this.setMaximumSize(new Dimension(pxLeng, pxWidth));
+        GridLayout experimentLayout = new GridLayout(38,2);
+        this.setLayout(experimentLayout);
+        //Load Memory Map Image
+        try {
+            colors[0] = new ImageIcon(getClass().getResource("fill.png"));
+            colors[1] = new ImageIcon(getClass().getResource("green.png"));
+            for(int i = 0; i < 38; i++) {
+                displayField[i] = new JLabel(colors[0]);
+                this.add(displayField[i]);
+            }
+            //VERY IMPORTANT THIS IS HOW TO PARTITION THE PANEL BY PROCESS
+            displayField[5].setIcon(colors[1]);
+            displayField[10].setIcon(colors[1]);
+
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println("Image cannot be found");
+        }
     }
 
-
-   
     
+    //Setters for modifying panel
+
+
+    //Insert
+    
+/*
+    public static void main(String args[]) {
+        AlgoPanel p = new AlgoPanel();
+        JFrame f = new JFrame();
+        f.add(p);
+        f.setVisible(true);
+    }
+
+ */   
 }
