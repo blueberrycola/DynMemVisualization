@@ -75,10 +75,11 @@ public class AlgoPanel extends JPanel {
         //Find process color
         for(int i = 0; i < 38; i++) {
             if(state[i][1] != null) {
-                if(Integer.parseInt(state[i][0]) == p && temp[0] == 0) {
+                if(Integer.parseInt(state[i][0]) == p && !startFound) {
                     System.out.println("COLOR FOUND");
                     System.out.println(state[i][1]);
                     temp[0] = i;
+                    startFound = true;
                 } else if(Integer.parseInt(state[i][0]) == p) {
                     temp[1] = i;
                 }
@@ -88,35 +89,55 @@ public class AlgoPanel extends JPanel {
         return temp;
     }
     //Retrieves interval for start command in FirstFit scenario
-    public String ffIndex(int size) {
+    public int[] ffIndex(int size) {
         //Find the first available section of memory
         int start = 0;
         int end = 1;
-        int cluster = getCluster(size);
-        String interval = "";
-        //Iterate until i and cluster size is = and all tiles are "FREE"
-        for(int i = 0; i < 37; i++) {
-            //System.out.println(state[i][1]);
-            if(state[i][1].equals("FREE")) {
-                end = i;
-                int cSize = end - start;
-                if(cSize == cluster - 1) {
-                    System.out.println("SIZE FOUND");
-                    System.out.println("Start: " + start + " End: " + end);
-                    interval += start;
-                    interval += " ";
-                    interval += end;
-                    
+        int cluster = getCluster(size)-1;
+        int interval[] = new int[2];
+        boolean startEnable = false;
+        boolean endEnable = false;
+        int temp = cluster;
+        //BASECASE: If size < 100
+        if(size <= 100) {
+            for(int i = 0; i <= 37; i++){
+                if(state[i][1] != null) {
+                    if(state[i][1].equals("FREE")) {
+                        interval[0] = i;
+                        interval[1] = i;
+                        break;
+                    }
                 }
-                
-                
-
-            } else {
-                System.out.println("ALLOC MEM FOUND");
-                start = i + 1;
-                end = i + 1;
+            }
+        } else {
+            //Iterate until i and cluster size is = and all tiles are "FREE"
+            for(int i = 0; i <= 37; i++) {
+                //System.out.println(state[i][1]);
+                if(state[i][1] != null) {
+                    if(state[i][1].equals("FREE") && !startEnable) {
+                        start = i;
+                        startEnable = true;
+                        System.out.println("Start found: " + start);
+                        
+                        
+                    } else if(state[i][1].equals("FREE") && temp != 0) {
+                        end = i;
+                        endEnable = true;
+                        temp--;
+                    }
+                    
+                    if(temp == 0) {
+                        System.out.println("INTERVAL FOUND: " + start + " " + end);
+                        interval[0] = start;
+                        interval[1] = end;
+                    }
+                }
             }
         }
+        
+        
+        
+
         
         return interval;
     }
@@ -135,12 +156,12 @@ public class AlgoPanel extends JPanel {
         if(temp[1].equals("start")) {
             int size = Integer.parseInt(temp[2]);
             //index determined by algo, colorid determined by rotation (i % colorIDsize + 1)
-            String[] interval;
+            int[] interval;
             if(this.algorithm.equals("First-Fit")) {
-                interval = ffIndex(size).split(" ");
-                //Paint interval
+                interval = ffIndex(size);
+                System.out.println("INTERVAL: " + interval[0] + " " + interval[1]);
 
-                for(int i = Integer.parseInt(interval[0]); i <= Integer.parseInt(interval[1]); i++) {
+                for(int i = interval[0]; i <= interval[1]; i++) {
                     //Change state
                     setPanel(i, proc, colorRotation);
                 }
@@ -157,9 +178,15 @@ public class AlgoPanel extends JPanel {
             System.out.println("PROCESS: " + proc);
             interval = getProcInterval(proc);
             System.out.println(interval[0] + " " + interval[1]);
-            for(int i = interval[0]; i <= interval[1]; i++) {
-                freePanel(i);
+            //Case for when you are removing only one tile
+            if(interval[0] > interval[1]) {
+                freePanel(interval[0]);
+            } else {
+                for(int i = interval[0]; i <= interval[1]; i++) {
+                    freePanel(i);
+                }
             }
+            
             
         }
 
