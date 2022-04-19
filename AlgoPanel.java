@@ -113,8 +113,8 @@ public class AlgoPanel extends JPanel {
 
             } else {
                 System.out.println("ALLOC MEM FOUND");
-                start = i;
-                end = i;
+                start = i + 1;
+                end = i + 1;
             }
         }
         
