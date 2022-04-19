@@ -124,6 +124,9 @@ public class AlgoPanel extends JPanel {
                         end = i;
                         endEnable = true;
                         temp--;
+                    } else if(!state[i][1].equals("FREE") && temp != 0) {
+                        startEnable = false;
+                        temp = cluster;
                     }
                     
                     if(temp == 0) {
@@ -149,7 +152,9 @@ public class AlgoPanel extends JPanel {
     public void recvInstr(String arg) {
         System.out.println(arg);
         String temp[] = arg.split(" ");
-        
+        if(colorRotation > 12) {
+            colorRotation = 1;
+        }
         //Parse first string, remove 'P' and parseInt the rest
         int proc = Integer.parseInt(temp[0].substring(1));
         //Examine second string
@@ -231,5 +236,5 @@ public class AlgoPanel extends JPanel {
     public String getProc(int index) {
         return state[index][0];
     }
-    //FIXME: BUG CAUSING TILE OVERLAP IN ffIndex   
+      
 }
