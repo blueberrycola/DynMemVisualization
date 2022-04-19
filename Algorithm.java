@@ -1,24 +1,16 @@
 package guipackage;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.lang.*;
 
 public class Algorithm {
     //Vars responsible for instruction interpretation
     String algos[] = {"First-Fit", "Best-Fit", "Worst-Fit"};
-    String buffer[] = new String[128];
-    int instrSize = 0; //Behaves like length() function (index + 1)
-    String algorithm = ""; //Name of algorithm
-    String path = "C:\\Users\\chase-pc\\Documents\\GitHub\\javaDynMemGUI\\src\\main\\java\\guipackage\\";
-    //Supports up to 16 processes for a single image of memory
+    int instrSize = 3800; //Behaves like length() function (index + 1)
+    String algorithm; //Name of algorithm
     
 
     int partitionbuffer[][] = new int[16][2];    //Data of each process. second dimension is used for if process now free or active (0, 1)
     int memorySize = 0;
-    int width = 0;
-    int lastIndex = 0; //Not last number of partition but last available space in memory
-    //Used to store data for free and allocated tables in gui
     String[][] allocTable = new String[16][2];
     String[][] freeTable = new String[16][2];
         
@@ -29,31 +21,6 @@ public class Algorithm {
         this.algorithm = a;
     }
     
-    /***
-     *  Void function responsible for loading instructions from txt file
-     *  into string buffer to be split later. FIXME: pwd + instructions
-     *  instead of hard coding path
-     */
-    public void readInstr() {
-        BufferedReader reader;
-        path += "instructions";
-        try {
-            int i = 1;
-            reader = new BufferedReader(new FileReader(path));
-            String line = reader.readLine();
-            buffer[0] = line; //
-            
-            while(line != null) {
-                line = reader.readLine();
-                buffer[i] = line;
-                i++;
-            }
-            instrSize = i + 1;
-            System.out.println("Finished!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     /***
      * A void function responsible for taking a single line of instruction
      * input and seperating each word by space into a temporary array.
@@ -97,7 +64,7 @@ public class Algorithm {
 
     public static void main(String args[]) {
         Algorithm algo = new Algorithm();
-        algo.readInstr();
+        
         algo.execInstr("P1 start 400");
     }
 
