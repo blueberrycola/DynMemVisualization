@@ -18,7 +18,7 @@ public class MainFrame extends JFrame implements ActionListener{
     JPanel titlePanel, mainPanel, buttonPanel, tablePanel, instrPanel;
 
     //Instruction Variables
-    String buffer[] = new String[128];
+    String buffer[] = new String[128]; //Dictates instruction for all 3 panels
     int instrSize = 0;
     String path = "C:\\Users\\chase-pc\\Documents\\GitHub\\javaDynMemGUI\\src\\main\\java\\guipackage\\instructions.txt";
     String filepath = "instructions.txt"; //default value
@@ -42,9 +42,9 @@ public class MainFrame extends JFrame implements ActionListener{
         //Panel holds text data containing instructions
         instrPanel = new JPanel();
 
-        firstFit = new AlgoPanel(buffer);
-        bestFit = new AlgoPanel(buffer);
-        worstFit = new AlgoPanel(buffer);
+        firstFit = new AlgoPanel();
+        bestFit = new AlgoPanel();
+        worstFit = new AlgoPanel();
         
         mainPanel.add(firstFit);
         mainPanel.add(bestFit);
@@ -89,6 +89,9 @@ public class MainFrame extends JFrame implements ActionListener{
             e.printStackTrace();
         }
     }
+    public void dummyFunc() {
+        firstFit.setPanel(0, 2);
+    }
 
     
     
@@ -97,5 +100,6 @@ public class MainFrame extends JFrame implements ActionListener{
     public static void main(String args[]) {
         
         MainFrame f = new MainFrame();
+        f.dummyFunc();
     }
 }

@@ -16,9 +16,9 @@ public class AlgoPanel extends JPanel {
     int pxWidth = 587;
     String[] buff;
     //Constructor of panel
-    public AlgoPanel(String[] buffer) {
+    public AlgoPanel() {
         //Setup Panel Layout. Images stack top to bottom
-        buff = buffer; //Load instructions into panel
+        
         this.setMaximumSize(new Dimension(pxLeng, pxWidth));
         GridLayout experimentLayout = new GridLayout(38,2);
         this.setLayout(experimentLayout);
