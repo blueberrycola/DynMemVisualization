@@ -12,6 +12,8 @@ public class AlgoPanel extends JPanel {
                         "DBLUE", "ORANGE", "PURPLE",
                         "SALMON", "SKYBLUE", "BROWN",
                         "LIME"}; //This array matches with the color ImageIcon indices
+    
+    
     int pxLeng = 210;
     int pxWidth = 587;
     String[] buff;
@@ -44,6 +46,7 @@ public class AlgoPanel extends JPanel {
                 displayField[i] = new JLabel(colors[0]);
                 this.add(displayField[i]);
                 state[i][1] = "FREE"; //Grey color string
+                state[i][0] = "0"; //Free Process
             }
 
             
@@ -66,6 +69,25 @@ public class AlgoPanel extends JPanel {
         return clusterSize;
     }
 
+    public int[] getProcInterval(int p) {
+        int[] temp = {0, 0};
+        boolean startFound = false;
+        //Find process color
+        for(int i = 0; i < 38; i++) {
+            if(state[i][1] != null) {
+                if(Integer.parseInt(state[i][0]) == p && temp[0] == 0) {
+                    System.out.println("COLOR FOUND");
+                    System.out.println(state[i][1]);
+                    temp[0] = i;
+                } else if(Integer.parseInt(state[i][0]) == p) {
+                    temp[1] = i;
+                }
+            }
+            
+        }
+        return temp;
+    }
+    //Retrieves interval for start command in FirstFit scenario
     public String ffIndex(int size) {
         //Find the first available section of memory
         int start = 0;
@@ -120,7 +142,7 @@ public class AlgoPanel extends JPanel {
 
                 for(int i = Integer.parseInt(interval[0]); i <= Integer.parseInt(interval[1]); i++) {
                     //Change state
-                    setPanel(i, colorRotation);
+                    setPanel(i, proc, colorRotation);
                 }
                 colorRotation++;
                 
@@ -129,14 +151,30 @@ public class AlgoPanel extends JPanel {
 
         } else if (temp[1].equals("end")) {
             //Free array elements with matching proc num
+            int[] interval;
+            //Since regardless of algorithm a process will be removed no
+            //if statements are required
+            System.out.println("PROCESS: " + proc);
+            interval = getProcInterval(proc);
+            System.out.println(interval[0] + " " + interval[1]);
+            for(int i = interval[0]; i <= interval[1]; i++) {
+                freePanel(i);
+            }
+            
         }
 
         //If start then parse 3rd string
     }
 
-    
+    public void debugInfo() {
+        for(int i = 0; i < 38; i++) {
+            System.out.print("PROC: " + state[i][0]);
+            System.out.println(" COLOR: " + state[i][1]);
+            
+        }
+    }
     //Setters for modifying panel
-    public void setPanel(int index, int colorid) {
+    public void setPanel(int index, int proc, int colorid) {
         if(index >= 38) {
             System.out.println("ERROR INVALID PARAM" + "(" + index + ":" + "changePanel()");
             System.exit(0);
@@ -144,11 +182,27 @@ public class AlgoPanel extends JPanel {
             //Change STATE of panel
             displayField[index].setIcon(colors[colorid]);
             state[index][1] = colorName[colorid];
-            state[index][0] = "" + index;
+            state[index][0] = "" + proc;
+        }
+    }
+
+    public void freePanel(int index) {
+        if(index >= 38) {
+            System.out.println("ERROR INVALID PARAM" + "(" + index + ":" + "changePanel()");
+            System.exit(0);
+        } else {
+            //Change STATE of panel
+            displayField[index].setIcon(colors[0]);
+            state[index][1] = colorName[0];
+            state[index][0] = "0";
         }
     }
     //Getter for panel color, TEST ME
     public String getPanel(int index) {
         return state[index][1];
-    }  
+    }
+    public String getProc(int index) {
+        return state[index][0];
+    }
+    //FIXME: BUG CAUSING TILE OVERLAP IN ffIndex   
 }

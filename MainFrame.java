@@ -59,7 +59,7 @@ public class MainFrame extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == autoRun) {
-            System.out.println("Test");
+            autorun();
         } else if(e.getSource() == step) {
             step();
         }
@@ -95,10 +95,14 @@ public class MainFrame extends JFrame implements ActionListener{
         }
         
     }
-
     public void step() {
         firstFit.recvInstr(buffer[step_i]);
         step_i++;
+    }
+    //BEING USED AS DEBUGGING TOOL FOR NOW
+    public void autorun() {
+        firstFit.debugInfo();
+
     }
     
     public static void main(String args[]) {
