@@ -14,8 +14,11 @@ public class AlgoPanel extends JPanel {
                         "LIME"}; //This array matches with the color ImageIcon indices
     int pxLeng = 210;
     int pxWidth = 587;
-    public AlgoPanel() {
+    String[] buff;
+    //Constructor of panel
+    public AlgoPanel(String[] buffer) {
         //Setup Panel Layout. Images stack top to bottom
+        buff = buffer; //Load instructions into panel
         this.setMaximumSize(new Dimension(pxLeng, pxWidth));
         GridLayout experimentLayout = new GridLayout(38,2);
         this.setLayout(experimentLayout);
@@ -58,7 +61,7 @@ public class AlgoPanel extends JPanel {
 
     
     //Setters for modifying panel, TEST ME
-    public void changePanel(int index, int colorid) {
+    public void setPanel(int index, int colorid) {
         if(index >= 38) {
             System.out.println("ERROR INVALID PARAM" + "(" + index + ":" + "changePanel()");
             System.exit(0);
@@ -71,17 +74,5 @@ public class AlgoPanel extends JPanel {
     //Getter for panel color, TEST ME
     public String getPanel(int index) {
         return state[index];
-    }
-
-    //Insert
-    
-/*
-    public static void main(String args[]) {
-        AlgoPanel p = new AlgoPanel();
-        JFrame f = new JFrame();
-        f.add(p);
-        f.setVisible(true);
-    }
-
- */   
+    }  
 }
