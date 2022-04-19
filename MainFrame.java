@@ -16,7 +16,7 @@ public class MainFrame extends JFrame implements ActionListener{
     JButton autoRun, step;
     AlgoPanel firstFit, bestFit, worstFit;
     JPanel titlePanel, mainPanel, buttonPanel, tablePanel, instrPanel;
-
+    int step_i = 1; //Step iterator
     //Instruction Variables
     String buffer[] = new String[128]; //Dictates instruction for all 3 panels
     int instrSize = 0;
@@ -25,8 +25,7 @@ public class MainFrame extends JFrame implements ActionListener{
     public MainFrame() {
         frame = new JFrame("Dynamic Memory Visualization: Made by Chase Johnston");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Load instruction buffer
-        loadInstr();
+        
         //Houses the 3 memory map diagrams.
         mainPanel = new JPanel();
         autoRun = new JButton("Auto Run");
@@ -42,9 +41,11 @@ public class MainFrame extends JFrame implements ActionListener{
         //Panel holds text data containing instructions
         instrPanel = new JPanel();
 
-        firstFit = new AlgoPanel();
-        bestFit = new AlgoPanel();
-        worstFit = new AlgoPanel();
+        firstFit = new AlgoPanel("First-Fit");
+        bestFit = new AlgoPanel("Best-Fit");
+        worstFit = new AlgoPanel("Worst-Fit");
+        //Load instruction buffer
+        loadInstr();
         
         mainPanel.add(firstFit);
         mainPanel.add(bestFit);
@@ -60,7 +61,7 @@ public class MainFrame extends JFrame implements ActionListener{
         if(e.getSource() == autoRun) {
             System.out.println("Test");
         } else if(e.getSource() == step) {
-            System.out.println("Test!");
+            step();
         }
     }
     
@@ -77,7 +78,11 @@ public class MainFrame extends JFrame implements ActionListener{
             
             reader = new BufferedReader(new FileReader(path));
             String line = reader.readLine();
-            buffer[0] = line; //
+            buffer[0] = line;
+            //Set memory size for each panel
+            firstFit.setMemSize(Integer.parseInt(buffer[0]));
+            bestFit.setMemSize(Integer.parseInt(buffer[0]));
+            worstFit.setMemSize(Integer.parseInt(buffer[0]));
             
             while(line != null) {
                 line = reader.readLine();
@@ -89,8 +94,11 @@ public class MainFrame extends JFrame implements ActionListener{
             e.printStackTrace();
         }
     }
-    public void dummyFunc() {
-        firstFit.setPanel(0, 2);
+
+    
+    public void step() {
+        firstFit.recvInstr(buffer[step_i]);
+        step_i++;
     }
 
     
@@ -100,6 +108,5 @@ public class MainFrame extends JFrame implements ActionListener{
     public static void main(String args[]) {
         
         MainFrame f = new MainFrame();
-        f.dummyFunc();
     }
 }

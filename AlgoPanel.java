@@ -5,8 +5,8 @@ import java.awt.*;
 public class AlgoPanel extends JPanel {
     JLabel displayField[] = new JLabel[38];
     ImageIcon colors[] = new ImageIcon[17]; //16 Processes + Possiblility of free
-    String state[] = new String[38];
-    
+    String state[][] = new String[38][2]; //index, 0: procnum, 1:color
+    String algorithm; //Variable used to determine how recvInstr will react
     String colorName[] = {"FREE", "GREEN", "RED",
                          "BLUE", "YELLOW", "DRED",
                         "DBLUE", "ORANGE", "PURPLE",
@@ -15,10 +15,11 @@ public class AlgoPanel extends JPanel {
     int pxLeng = 210;
     int pxWidth = 587;
     String[] buff;
+    int memSize = 0;
     //Constructor of panel
-    public AlgoPanel() {
+    public AlgoPanel(String arg) {
         //Setup Panel Layout. Images stack top to bottom
-        
+        algorithm = arg;
         this.setMaximumSize(new Dimension(pxLeng, pxWidth));
         GridLayout experimentLayout = new GridLayout(38,2);
         this.setLayout(experimentLayout);
@@ -42,7 +43,7 @@ public class AlgoPanel extends JPanel {
             for(int i = 0; i < 38; i++) {
                 displayField[i] = new JLabel(colors[0]);
                 this.add(displayField[i]);
-                state[i] = "FREE"; //Grey color string
+                state[i][1] = "FREE"; //Grey color string
             }
 
             //VERY IMPORTANT THIS IS HOW TO PARTITION THE PANEL BY PROCESS
@@ -58,21 +59,73 @@ public class AlgoPanel extends JPanel {
             System.out.println("Image cannot be found");
         }
     }
+    public int getCluster(int size) {
+        int clusterMod = size % 100;
+        int clusterSize = size / 100;
+        if(clusterMod == 0) {
+            return clusterSize;
+        } else {
+            clusterSize++;
+        }
+        return clusterSize;
+    }
+
+    public int ffIndex(int size) {
+        //Find the first available section of memory
+        int start = 0;
+        int end = 1;
+        int cluster = getCluster(size);
+        //Iterate until i and cluster size is = and all tiles are "FREE"
+        for(int i = 0; i < 37; i++) {
+            System.out.println(state[i][1]);
+            if(state[i][1].equals("FREE")) {
+                start = i;
+                
+
+            }
+        }
+        return 0;
+    }
+    public void setMemSize(int s) {
+        memSize = s;
+    }
+
+
+    public void recvInstr(String arg) {
+        System.out.println(arg);
+        String temp[] = arg.split(" ");
+        //Parse first string, remove 'P' and parseInt the rest
+        int proc = Integer.parseInt(temp[0].substring(1));
+        //Examine second string
+        if(temp[1].equals("start")) {
+            int size = Integer.parseInt(temp[2]);
+            //index determined by algo, colorid determined by rotation (i % colorIDsize + 1)
+            if(this.algorithm.equals("First-Fit")) {
+                int index = ffIndex(size);
+            }
+            
+
+        } else if (temp[1].equals("end")) {
+            //Free array elements with matching proc num
+        }
+
+        //If start then parse 3rd string
+    }
 
     
     //Setters for modifying panel, TEST ME
-    public void setPanel(int index, int colorid) {
+    public void setPanel(int procnum, int index, int colorid, int size) {
         if(index >= 38) {
             System.out.println("ERROR INVALID PARAM" + "(" + index + ":" + "changePanel()");
             System.exit(0);
         } else {
             
             displayField[index].setIcon(colors[colorid]);
-            state[index] = colorName[colorid];
+            state[index][1] = colorName[colorid];
         }
     }
     //Getter for panel color, TEST ME
     public String getPanel(int index) {
-        return state[index];
+        return state[index][1];
     }  
 }
