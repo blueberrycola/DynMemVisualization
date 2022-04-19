@@ -93,18 +93,14 @@ public class MainFrame extends JFrame implements ActionListener{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
 
-    
     public void step() {
         firstFit.recvInstr(buffer[step_i]);
         step_i++;
     }
-
     
-    
-    
-
     public static void main(String args[]) {
         
         MainFrame f = new MainFrame();

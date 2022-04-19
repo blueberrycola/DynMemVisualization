@@ -46,11 +46,7 @@ public class AlgoPanel extends JPanel {
                 state[i][1] = "FREE"; //Grey color string
             }
 
-            //VERY IMPORTANT THIS IS HOW TO PARTITION THE PANEL BY PROCESS
-            displayField[5].setIcon(colors[1]);
-            displayField[10].setIcon(colors[1]);
             
-            displayField[15].setIcon(colors[7]);
 
             
             
@@ -70,38 +66,64 @@ public class AlgoPanel extends JPanel {
         return clusterSize;
     }
 
-    public int ffIndex(int size) {
+    public String ffIndex(int size) {
         //Find the first available section of memory
         int start = 0;
         int end = 1;
         int cluster = getCluster(size);
+        String interval = "";
         //Iterate until i and cluster size is = and all tiles are "FREE"
         for(int i = 0; i < 37; i++) {
-            System.out.println(state[i][1]);
+            //System.out.println(state[i][1]);
             if(state[i][1].equals("FREE")) {
-                start = i;
+                end = i;
+                int cSize = end - start;
+                if(cSize == cluster - 1) {
+                    System.out.println("SIZE FOUND");
+                    System.out.println("Start: " + start + " End: " + end);
+                    interval += start;
+                    interval += " ";
+                    interval += end;
+                    
+                }
+                
                 
 
+            } else {
+                System.out.println("ALLOC MEM FOUND");
+                start = i;
+                end = i;
             }
         }
-        return 0;
+        
+        return interval;
     }
     public void setMemSize(int s) {
         memSize = s;
     }
 
-
+    int colorRotation = 1;
     public void recvInstr(String arg) {
         System.out.println(arg);
         String temp[] = arg.split(" ");
+        
         //Parse first string, remove 'P' and parseInt the rest
         int proc = Integer.parseInt(temp[0].substring(1));
         //Examine second string
         if(temp[1].equals("start")) {
             int size = Integer.parseInt(temp[2]);
             //index determined by algo, colorid determined by rotation (i % colorIDsize + 1)
+            String[] interval;
             if(this.algorithm.equals("First-Fit")) {
-                int index = ffIndex(size);
+                interval = ffIndex(size).split(" ");
+                //Paint interval
+
+                for(int i = Integer.parseInt(interval[0]); i <= Integer.parseInt(interval[1]); i++) {
+                    //Change state
+                    setPanel(i, colorRotation);
+                }
+                colorRotation++;
+                
             }
             
 
@@ -113,15 +135,16 @@ public class AlgoPanel extends JPanel {
     }
 
     
-    //Setters for modifying panel, TEST ME
-    public void setPanel(int procnum, int index, int colorid, int size) {
+    //Setters for modifying panel
+    public void setPanel(int index, int colorid) {
         if(index >= 38) {
             System.out.println("ERROR INVALID PARAM" + "(" + index + ":" + "changePanel()");
             System.exit(0);
         } else {
-            
+            //Change STATE of panel
             displayField[index].setIcon(colors[colorid]);
             state[index][1] = colorName[colorid];
+            state[index][0] = "" + index;
         }
     }
     //Getter for panel color, TEST ME
