@@ -62,19 +62,75 @@ public class AlgoPanel extends JPanel {
             System.out.println("Image cannot be found");
         }
     }
-    int procNum = 1;
-    public void renderLabels() {
-        if(l != 0) {
-            for(int i = 0; i < 38; i++) {
-                if(state[i][0].equals("0")) {
-                    String arg = "FREE" + " Size (" + 100 + ")";
-                    displayField[i].setText(arg);
-                } else {
-                    String arg = "                             ";
-                    displayField[i].setText(arg);
-                }
+    /**
+     * Function used to find index interval of block(s) of free memory
+     * so it can be properly labeled. FIXME: Implement labelpositions for free memory aswell
+     */
+    ArrayList<String> freeblocks = new ArrayList<String>();
+    public void findFree() {
+        String temp = "";
+        boolean startFound = false;
+        boolean endFound = false;
+        int start = 0;
+        int end = 0;
+        for(int i = 0; i < 38; i++) {
+            if(state[i][0].equals("0") && !startFound) {
+                //Start of free memory segment found
+                start = i;
+                startFound = true;
+            } else if(!state[i][0].equals("0") && startFound && !endFound) {
+                //Single space of memory
+                end = start;
+                startFound = false; //Reset to find another space of free mem
+                temp = "" + start + " " + end;
+                temp += " " + "100";
+                freeblocks.add(temp);
+                temp = "";
+            } else if(state[i][0].equals("0") && startFound) {
+                //Space of memory bigger than one tile
+                end = i;
+                endFound = true; //Free memory bigger than one tile found
+            } else if(!state[i][0].equals("0") && startFound && endFound) {
+                //End segment discovered; create segment string
+                temp = "" + start + " " + end;
                 
+                int size = 0;
+                for(int j = start; j <= end; j++) {
+                    size += 100;
+                    
+                }
+                temp += " " + size;
+                freeblocks.add(temp);
+                //Reset start and end found
+                startFound = false;
+                endFound = false;
+                temp = "";
             }
+        }
+        
+    }
+    int procNum = 1;
+    /**
+     * Function used to add data relating to memory displayed on the stack.
+     */
+    public void renderLabels() {
+        //Render Free memory
+        findFree();
+        for(int i = 0; i < freeblocks.size(); i++) {
+            String arg = freeblocks.get(i);
+            String[] cmd = arg.split(" ");
+            int start = Integer.parseInt(cmd[0]);
+            int end = Integer.parseInt(cmd[1]);
+            int size = Integer.parseInt(cmd[2]);
+            //Print start label of FREE
+            String str = "FREE" + " Size (" + size + ")";
+            displayField[start].setText(str);
+            for(int j = start + 1; j <= end; j++) {
+                displayField[j].setText("                             ");
+            }
+        }
+        
+        if(l != 0) {
             
             for(int i = 0; i < l; i++) {
                 String cmd = labelpositions.get(i);
@@ -83,12 +139,13 @@ public class AlgoPanel extends JPanel {
                 String pnum = state[Integer.parseInt(buff[0])][0];
                 System.out.println("PNUM: " + pnum);
                 String arg = "     P" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
-                System.out.println("AHHHHHH:" + arg);
                 displayField[Integer.parseInt(buff[0])].setText(arg);
 
                 
             }
+            
         }
+        
         
     }
     public int getCluster(int size) {
@@ -245,10 +302,10 @@ public class AlgoPanel extends JPanel {
         for(int i = 0; i < l; i++) {
             System.out.println(labelpositions.get(i));
         }
-        for(int i = 0; i < 38; i++) {
-            System.out.print(state[i][0]);
-            System.out.println(" " + state[i][1]);
+        for(int i = 0; i < freeblocks.size(); i++) {
+            System.out.println(freeblocks.get(i));
         }
+        
     }
     //Setters for modifying panel
     public void setPanel(int index, int proc, int colorid) {
