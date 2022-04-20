@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame implements ActionListener{
     
-
     JFrame frame;
     JLabel title, displayField1, displayField2, displayField3;
     JLabel memAmount;
@@ -97,6 +96,7 @@ public class MainFrame extends JFrame implements ActionListener{
     }
     public void step() {
         firstFit.recvInstr(buffer[step_i]);
+        firstFit.renderLabels();
         step_i++;
     }
     //BEING USED AS DEBUGGING TOOL FOR NOW

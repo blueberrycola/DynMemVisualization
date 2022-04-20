@@ -2,6 +2,8 @@ package guipackage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.lang.*;
 public class AlgoPanel extends JPanel {
     JLabel displayField[] = new JLabel[38];
     ImageIcon colors[] = new ImageIcon[17]; //16 Processes + Possiblility of free
@@ -12,10 +14,12 @@ public class AlgoPanel extends JPanel {
                         "DBLUE", "ORANGE", "PURPLE",
                         "SALMON", "SKYBLUE", "BROWN",
                         "LIME"}; //This array matches with the color ImageIcon indices
+    ArrayList<String> labelpositions = new ArrayList<String>();
+    int l = 0;
+    JLabel procText[] = new JLabel[32];
     
-    
-    int pxLeng = 210;
-    int pxWidth = 587;
+    int pxLeng = 310;
+    int pxWidth = 887;
     String[] buff;
     int memSize = 0;
     //Constructor of panel
@@ -58,6 +62,26 @@ public class AlgoPanel extends JPanel {
             System.out.println("Image cannot be found");
         }
     }
+    int procNum = 1;
+    public void renderLabels() {
+        if(l != 0) {
+            for(int i = 0; i < 38; i++) {
+                String arg = "" + 0 + "Size(" + 100 + ")";
+                displayField[i].setText(arg);
+            }
+            
+            for(int i = 0; i < l; i++) {
+                String cmd = labelpositions.get(i);
+                String buff[] = cmd.split(" ");
+                //Size is found by (buff[1]+1) - buff[0]) * 100
+                String arg = "" + procNum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100);
+                displayField[Integer.parseInt(buff[0])].setText(arg);
+
+                
+            }
+        }
+        
+    }
     public int getCluster(int size) {
         int clusterMod = size % 100;
         int clusterSize = size / 100;
@@ -86,6 +110,9 @@ public class AlgoPanel extends JPanel {
             }
             
         }
+        String cmd = "" + temp[0] + " " + temp[1];
+        labelpositions.remove(cmd);
+        l--;
         return temp;
     }
     //Retrieves interval for start command in FirstFit scenario
@@ -130,17 +157,19 @@ public class AlgoPanel extends JPanel {
                     }
                     
                     if(temp == 0) {
-                        System.out.println("INTERVAL FOUND: " + start + " " + end);
                         interval[0] = start;
                         interval[1] = end;
+                        
                     }
                 }
             }
         }
+        System.out.println("INTERVAL FOUND: " + start + " " + end);
         
-        
-        
-
+        //IMPORTANT: used for renderLabel()
+        String word = "" + interval[0] + " " + interval[1];
+        labelpositions.add(word);
+        l++; 
         
         return interval;
     }
@@ -153,7 +182,7 @@ public class AlgoPanel extends JPanel {
         System.out.println(arg);
         String temp[] = arg.split(" ");
         if(colorRotation > 12) {
-            colorRotation = 1;
+            colorRotation = 2;
         }
         //Parse first string, remove 'P' and parseInt the rest
         int proc = Integer.parseInt(temp[0].substring(1));
@@ -172,6 +201,8 @@ public class AlgoPanel extends JPanel {
                 }
                 colorRotation++;
                 
+            } else if(this.algorithm.equals("Best-Fit")) {
+
             }
             
 
@@ -187,6 +218,7 @@ public class AlgoPanel extends JPanel {
             if(interval[0] > interval[1]) {
                 freePanel(interval[0]);
             } else {
+                displayField[0].setText("Dont");
                 for(int i = interval[0]; i <= interval[1]; i++) {
                     freePanel(i);
                 }
@@ -199,10 +231,8 @@ public class AlgoPanel extends JPanel {
     }
 
     public void debugInfo() {
-        for(int i = 0; i < 38; i++) {
-            System.out.print("PROC: " + state[i][0]);
-            System.out.println(" COLOR: " + state[i][1]);
-            
+        for(int i = 0; i < l; i++) {
+            System.out.println(labelpositions.get(i));
         }
     }
     //Setters for modifying panel
@@ -227,6 +257,7 @@ public class AlgoPanel extends JPanel {
             displayField[index].setIcon(colors[0]);
             state[index][1] = colorName[0];
             state[index][0] = "0";
+            
         }
     }
     //Getter for panel color, TEST ME
