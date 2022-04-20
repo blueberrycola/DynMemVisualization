@@ -86,11 +86,13 @@ public class AlgoPanel extends JPanel {
                 temp += " " + "100";
                 freeblocks.add(temp);
                 temp = "";
-            } else if(state[i][0].equals("0") && startFound) {
+                
+            }
+            else if(state[i][0].equals("0") && startFound) {
                 //Space of memory bigger than one tile
                 end = i;
                 endFound = true; //Free memory bigger than one tile found
-            } else if(!state[i][0].equals("0") && startFound && endFound) {
+            } else if((!state[i][0].equals("0") && startFound && endFound)) {
                 //End segment discovered; create segment string
                 temp = "" + start + " " + end;
                 
@@ -107,9 +109,35 @@ public class AlgoPanel extends JPanel {
                 temp = "";
             }
         }
+        //Case for free memory that ends at last index
+        if(start != 0 && startFound && endFound) {
+            //End segment discovered; create segment string
+            temp = "" + start + " " + end;
+                
+            int size = 0;
+            for(int j = start; j <= end; j++) {
+                size += 100;
+                
+            }
+            temp += " " + size;
+            freeblocks.add(temp);
+            //Reset start and end found
+            startFound = false;
+            endFound = false;
+            temp = "";
+        }
         
     }
     int procNum = 1;
+    public void blankSlate() {
+        for(int i = 0; i < 38; i++) {
+            if(i == 0) {
+                displayField[i].setText("  FREE:                    (3800)");
+            } else {displayField[i].setText("                                   "); }
+            
+        }
+    }
+    
     /**
      * Function used to add data relating to memory displayed on the stack.
      */
@@ -140,6 +168,13 @@ public class AlgoPanel extends JPanel {
                 System.out.println("PNUM: " + pnum);
                 String arg = "     P" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
                 displayField[Integer.parseInt(buff[0])].setText(arg);
+                
+                int start = Integer.parseInt(buff[0]);
+                int end = Integer.parseInt(buff[1]);
+                
+                for(int j = start + 1; j <= end; j++) {
+                    displayField[j].setText("                             ");
+                }
 
                 
             }
@@ -267,6 +302,7 @@ public class AlgoPanel extends JPanel {
                 }
                 colorRotation++;
                 
+                
             } else if(this.algorithm.equals("Best-Fit")) {
 
             }
@@ -289,10 +325,14 @@ public class AlgoPanel extends JPanel {
                     freePanel(i);
                 }
             }
+
+            
             
             
             
         }
+        //Find free regions after placing new process
+        findFree();
         renderLabels();
 
         //If start then parse 3rd string
