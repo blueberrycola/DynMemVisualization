@@ -66,8 +66,14 @@ public class AlgoPanel extends JPanel {
     public void renderLabels() {
         if(l != 0) {
             for(int i = 0; i < 38; i++) {
-                String arg = "" + 0 + " Size (" + 100 + ")";
-                displayField[i].setText(arg);
+                if(state[i][0].equals("0")) {
+                    String arg = "FREE" + " Size (" + 100 + ")";
+                    displayField[i].setText(arg);
+                } else {
+                    String arg = "                             ";
+                    displayField[i].setText(arg);
+                }
+                
             }
             
             for(int i = 0; i < l; i++) {
@@ -76,7 +82,8 @@ public class AlgoPanel extends JPanel {
                 //Size is found by (buff[1]+1) - buff[0]) * 100
                 String pnum = state[Integer.parseInt(buff[0])][0];
                 System.out.println("PNUM: " + pnum);
-                String arg = "" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
+                String arg = "     P" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
+                System.out.println("AHHHHHH:" + arg);
                 displayField[Integer.parseInt(buff[0])].setText(arg);
 
                 
