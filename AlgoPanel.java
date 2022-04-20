@@ -66,7 +66,7 @@ public class AlgoPanel extends JPanel {
     public void renderLabels() {
         if(l != 0) {
             for(int i = 0; i < 38; i++) {
-                String arg = "" + 0 + "Size(" + 100 + ")";
+                String arg = "" + 0 + " Size (" + 100 + ")";
                 displayField[i].setText(arg);
             }
             
@@ -74,7 +74,9 @@ public class AlgoPanel extends JPanel {
                 String cmd = labelpositions.get(i);
                 String buff[] = cmd.split(" ");
                 //Size is found by (buff[1]+1) - buff[0]) * 100
-                String arg = "" + procNum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100);
+                String pnum = state[Integer.parseInt(buff[0])][0];
+                System.out.println("PNUM: " + pnum);
+                String arg = "" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
                 displayField[Integer.parseInt(buff[0])].setText(arg);
 
                 
@@ -218,14 +220,16 @@ public class AlgoPanel extends JPanel {
             if(interval[0] > interval[1]) {
                 freePanel(interval[0]);
             } else {
-                displayField[0].setText("Dont");
+                
                 for(int i = interval[0]; i <= interval[1]; i++) {
                     freePanel(i);
                 }
             }
             
             
+            
         }
+        renderLabels();
 
         //If start then parse 3rd string
     }
@@ -233,6 +237,10 @@ public class AlgoPanel extends JPanel {
     public void debugInfo() {
         for(int i = 0; i < l; i++) {
             System.out.println(labelpositions.get(i));
+        }
+        for(int i = 0; i < 38; i++) {
+            System.out.print(state[i][0]);
+            System.out.println(" " + state[i][1]);
         }
     }
     //Setters for modifying panel

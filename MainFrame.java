@@ -96,7 +96,6 @@ public class MainFrame extends JFrame implements ActionListener{
     }
     public void step() {
         firstFit.recvInstr(buffer[step_i]);
-        firstFit.renderLabels();
         step_i++;
     }
     //BEING USED AS DEBUGGING TOOL FOR NOW
