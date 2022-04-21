@@ -302,11 +302,6 @@ public class AlgoPanel extends JPanel {
                 } else {
                     comp = -42; //Labels as too big
                 }
-                    
-                
-                
-                
-
             }
             System.out.println("TESTING COMPS");
             int min = comps[0];
@@ -322,10 +317,69 @@ public class AlgoPanel extends JPanel {
                     if(min > comps[i] && comps[i] > 0) {
                         min = comps[i];
                         minIndex = i;
-                    } else {
-                        
                     }
+                }
+                
+            }
+            //An interval has been decided
+            String cmd = freeblocks.get(minIndex);
+            String[] intervalcmd = cmd.split(" ");
+            interval[0] = Integer.parseInt(intervalcmd[0]);
+            int stepback = comps[minIndex] / 100;
+            interval[1] = Integer.parseInt(intervalcmd[1]) - stepback;
+        
+            //IMPORTANT: used for renderLabel()
+            String word = "" + interval[0] + " " + interval[1];
+            labelpositions.add(word);
+            l++; //END OF IMPORTANT renderLabel() vars
+            
+        }
+        return interval;
+    }
+    public int[] wfIndex(int size) {
+        int[] interval = new int[2];
+        //Best-Fit will behave like First-Fit until the first block of memory is removed.
+        if(freeblocks.isEmpty() || freeblocks.size() == 1) {
+            return ffIndex(size);
+        } else {
+            //Refresh state of free memory
+            findFree();
 
+            //Scan thru each size of available free mem. Pick the one closest to actual param
+            int[] comps = new int[freeblocks.size()];
+            int comp = 0;
+            for(int i = 0; i < freeblocks.size(); i++) {
+                String str = freeblocks.get(i);
+                
+                String[] cmd = str.split(" ");
+                int start = Integer.parseInt(cmd[0]);
+                int end = Integer.parseInt(cmd[1]);
+                comp = Integer.parseInt(cmd[2]);
+                comp = comp - size;
+                
+                //Store comp into array at matching index with freeblocks.get findMin and choose
+                if(comp >= 0) {
+                    comps[i] = comp;
+                } else {
+                    comp = -42; //Labels as too big
+                }
+            }
+            System.out.println("TESTING COMPS");
+            //FIXME CHANGE LABELS TO max!!!
+            int min = comps[0];
+            int minIndex = 0;
+            for(int i = 1; i < freeblocks.size(); i++) {
+                System.out.println(comps);
+                if(comps[i] == 0) {
+                    //Access freeblocks entry and set panel accordingly
+                    minIndex = i;
+                    break;
+                } else {
+                    //Find MAX of comps[i]
+                    if(min < comps[i] && comps[i] > 0) {
+                        min = comps[i];
+                        minIndex = i;
+                    }
                 }
                 
             }
@@ -380,6 +434,12 @@ public class AlgoPanel extends JPanel {
                 }
                 colorRotation++;
                 
+            } else if(this.algorithm.equals("Worst-Fit")) {
+                interval = wfIndex(size);
+                for(int i = interval[0]; i <= interval[1]; i++) {
+                    setPanel(i, proc, colorRotation);
+                }
+                colorRotation++;
             }
             
 

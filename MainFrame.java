@@ -45,6 +45,7 @@ public class MainFrame extends JFrame implements ActionListener{
         bestFit = new AlgoPanel("Best-Fit");
         bestFit.blankSlate();
         worstFit = new AlgoPanel("Worst-Fit");
+        worstFit.blankSlate();
         //Load instruction buffer
         loadInstr();
         
@@ -100,6 +101,7 @@ public class MainFrame extends JFrame implements ActionListener{
         
         firstFit.recvInstr(buffer[step_i]);
         bestFit.recvInstr(buffer[step_i]);
+        worstFit.recvInstr(buffer[step_i]);
         step_i++;
     }
     //BEING USED AS DEBUGGING TOOL FOR NOW
