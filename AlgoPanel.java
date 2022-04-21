@@ -339,6 +339,7 @@ public class AlgoPanel extends JPanel {
             //IMPORTANT: used for renderLabel()
             String word = "" + interval[0] + " " + interval[1];
             labelpositions.add(word);
+            l++; //END OF IMPORTANT renderLabel() vars
             
         }
         return interval;
@@ -414,14 +415,15 @@ public class AlgoPanel extends JPanel {
 
     public void debugInfo() {
         if(this.algorithm.equals("Best-Fit")) {
-            System.out.println("STATE PRINT:");
-            for(int i = 0; i < 38; i++) {
-                System.out.print("PROC: " + state[i][0] + " COLOR: " + state[i][0] + "\n");
-            }
+            
             
             
             for(int i = 0; i < freeblocks.size(); i++) {
                 System.out.println(freeblocks.get(i));
+            }
+            System.out.println("ALLOC:");
+            for(int i = 0; i < labelpositions.size(); i++) {
+                System.out.println(labelpositions.get(i));
             }
             
         }
