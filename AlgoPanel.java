@@ -16,7 +16,7 @@ public class AlgoPanel extends JPanel {
                         "LIME"}; //This array matches with the color ImageIcon indices
     ArrayList<String> labelpositions = new ArrayList<String>();
     int l = 0;
-    JLabel procText[] = new JLabel[32];
+    JLabel procText[] = new JLabel[38];
     
     int pxLeng = 310;
     int pxWidth = 887;
@@ -75,6 +75,11 @@ public class AlgoPanel extends JPanel {
         int start = 0;
         int end = 0;
         for(int i = 0; i < 38; i++) {
+            if(state[i][0].equals("0") && !startFound && !endFound && i == 37) {
+                start = i;
+                end = i;
+            }
+            
             if(state[i][0].equals("0") && !startFound) {
                 //Start of free memory segment found
                 start = i;
@@ -110,6 +115,16 @@ public class AlgoPanel extends JPanel {
                 temp = "";
             }
         }
+        if(start == end) {
+            temp = "" + start + " " + end;
+            temp += " " + "100";
+            freeblocks.add(temp);
+            //Reset start and end found
+            startFound = false;
+            endFound = false;
+            temp = "";
+        }
+
         //Case for free memory that ends at last index
         if(start != 0 && startFound && endFound) {
             //End segment discovered; create segment string
@@ -289,15 +304,16 @@ public class AlgoPanel extends JPanel {
                 if(comp >= 0) {
                     comps[i] = comp;
                 } else {
-                    comp = -42; //Labels as too big
+                    comps[i] = -42;
                 }
             }
             //IMPORTANT: COMPARING SIZE LEFT OVER IF PLACED
-            int min = comps[0];
+            int min = 1000000000;
             int minIndex = 0;
-            for(int i = 1; i < freeblocks.size(); i++) {
+            for(int i = 0; i < freeblocks.size(); i++) {
                 if(comps[i] == 0) {
                     //Access freeblocks entry and set panel accordingly
+                    min = 0;
                     minIndex = i;
                     break;
                 } else {
@@ -455,6 +471,9 @@ public class AlgoPanel extends JPanel {
         if(this.algorithm.equals("Best-Fit")) {
             for(int i = 0; i < 38; i++) {
                 System.out.println(""+ state[i][0] + " " + state[i][1]);
+            }
+            for(int i = 0; i < freeblocks.size(); i++) {
+                System.out.println("FREEBLOCKS: " + freeblocks.get(i));
             }
         }
     }
