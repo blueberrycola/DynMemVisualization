@@ -111,12 +111,17 @@ public class MainFrame extends JFrame implements ActionListener{
         worstFit.recvInstr(buffer[step_i]);
         step_i++;
     }
-    //BEING USED AS DEBUGGING TOOL FOR NOW
+    
     public void autorun() {
+        for(int i = step_i; i < 124; i++) {
+            if(buffer[i] != null) {
+                firstFit.recvInstr(buffer[i]);
+                bestFit.recvInstr(buffer[i]);
+                worstFit.recvInstr(buffer[i]);
+            }
+            
 
-        bestFit.debugInfo();
-        bestFit.findFree();
-        bestFit.renderLabels();
+        }
 
     }
     
