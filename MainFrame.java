@@ -1,10 +1,9 @@
 package guipackage;
 import java.awt.BorderLayout;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import javax.swing.*;
-
+import java.lang.Thread;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -115,9 +114,16 @@ public class MainFrame extends JFrame implements ActionListener{
     public void autorun() {
         for(int i = step_i; i < 124; i++) {
             if(buffer[i] != null) {
-                firstFit.recvInstr(buffer[i]);
-                bestFit.recvInstr(buffer[i]);
-                worstFit.recvInstr(buffer[i]);
+                try {
+                    Thread.sleep(50);
+                    firstFit.recvInstr(buffer[i]);
+                    bestFit.recvInstr(buffer[i]);
+                    worstFit.recvInstr(buffer[i]);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                
+
             }
             
 
