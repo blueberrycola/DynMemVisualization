@@ -64,10 +64,11 @@ public class AlgoPanel extends JPanel {
     }
     /**
      * Function used to find index interval of block(s) of free memory
-     * so it can be properly labeled. FIXME: Implement labelpositions for free memory aswell
+     * so it can be properly labeled.
      */
     ArrayList<String> freeblocks = new ArrayList<String>();
     public void findFree() {
+        freeblocks = new ArrayList<String>();
         String temp = "";
         boolean startFound = false;
         boolean endFound = false;
@@ -245,9 +246,6 @@ public class AlgoPanel extends JPanel {
                     if(state[i][1].equals("FREE") && !startEnable) {
                         start = i;
                         startEnable = true;
-                        System.out.println("Start found: " + start);
-                        
-                        
                     } else if(state[i][1].equals("FREE") && temp != 0) {
                         end = i;
                         endEnable = true;
@@ -277,7 +275,74 @@ public class AlgoPanel extends JPanel {
     public void setMemSize(int s) {
         memSize = s;
     }
+    public int[] bfIndex(int size) {
+        int[] interval = new int[2];
+        //Best-Fit will behave like First-Fit until the first block of memory is removed.
+        if(freeblocks.isEmpty() || freeblocks.size() == 1) {
+            return ffIndex(size);
+        } else {
+            //Refresh state of free memory
+            findFree();
 
+            //Scan thru each size of available free mem. Pick the one closest to actual param
+            int[] comps = new int[freeblocks.size()];
+            int comp = 0;
+            for(int i = 0; i < freeblocks.size(); i++) {
+                String str = freeblocks.get(i);
+                
+                String[] cmd = str.split(" ");
+                int start = Integer.parseInt(cmd[0]);
+                int end = Integer.parseInt(cmd[1]);
+                comp = Integer.parseInt(cmd[2]);
+                comp = comp - size;
+                
+                //Store comp into array at matching index with freeblocks.get findMin and choose
+                if(comp >= 0) {
+                    comps[i] = comp;
+                } else {
+                    comp = -42; //Labels as too big
+                }
+                    
+                
+                
+                
+
+            }
+            System.out.println("TESTING COMPS");
+            int min = comps[0];
+            int minIndex = 0;
+            for(int i = 1; i < freeblocks.size(); i++) {
+                System.out.println(comps);
+                if(comps[i] == 0) {
+                    //Access freeblocks entry and set panel accordingly
+                    minIndex = i;
+                    break;
+                } else {
+                    //Find min of comps[i]
+                    if(min > comps[i] && comps[i] > 0) {
+                        min = comps[i];
+                        minIndex = i;
+                    } else {
+                        
+                    }
+
+                }
+                
+            }
+            //An interval has been decided
+            String cmd = freeblocks.get(minIndex);
+            String[] intervalcmd = cmd.split(" ");
+            interval[0] = Integer.parseInt(intervalcmd[0]);
+            int stepback = comps[minIndex] / 100;
+            interval[1] = Integer.parseInt(intervalcmd[1]) - stepback;
+        
+            //IMPORTANT: used for renderLabel()
+            String word = "" + interval[0] + " " + interval[1];
+            labelpositions.add(word);
+            
+        }
+        return interval;
+    }
     int colorRotation = 1;
     public void recvInstr(String arg) {
         System.out.println(arg);
@@ -304,7 +369,16 @@ public class AlgoPanel extends JPanel {
                 
                 
             } else if(this.algorithm.equals("Best-Fit")) {
+                interval = bfIndex(size);
+                System.out.println(interval);
+                System.out.println("INTERVAL: " + interval[0] + " " + interval[1]);
 
+                for(int i = interval[0]; i <= interval[1]; i++) {
+                    //Change state
+                    setPanel(i, proc, colorRotation);
+                }
+                colorRotation++;
+                
             }
             
 
@@ -339,12 +413,20 @@ public class AlgoPanel extends JPanel {
     }
 
     public void debugInfo() {
-        for(int i = 0; i < l; i++) {
-            System.out.println(labelpositions.get(i));
+        if(this.algorithm.equals("Best-Fit")) {
+            System.out.println("STATE PRINT:");
+            for(int i = 0; i < 38; i++) {
+                System.out.print("PROC: " + state[i][0] + " COLOR: " + state[i][0] + "\n");
+            }
+            
+            
+            for(int i = 0; i < freeblocks.size(); i++) {
+                System.out.println(freeblocks.get(i));
+            }
+            
         }
-        for(int i = 0; i < freeblocks.size(); i++) {
-            System.out.println(freeblocks.get(i));
-        }
+        
+        
         
     }
     //Setters for modifying panel
