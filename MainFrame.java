@@ -106,10 +106,9 @@ public class MainFrame extends JFrame implements ActionListener{
     }
     //BEING USED AS DEBUGGING TOOL FOR NOW
     public void autorun() {
-        //System.out.println("FIRST FIT");
-        //firstFit.debugInfo();
-        System.out.println("BEST FIT");
+
         bestFit.debugInfo();
+        bestFit.renderLabels();
 
     }
     

@@ -158,15 +158,13 @@ public class AlgoPanel extends JPanel {
                 displayField[j].setText("                             ");
             }
         }
-        
+        //FIXME: replace l with labelpositions.size()
         if(l != 0) {
-            
             for(int i = 0; i < l; i++) {
                 String cmd = labelpositions.get(i);
                 String buff[] = cmd.split(" ");
                 //Size is found by (buff[1]+1) - buff[0]) * 100
                 String pnum = state[Integer.parseInt(buff[0])][0];
-                System.out.println("PNUM: " + pnum);
                 String arg = "     P" + pnum + " Size (" + (((Integer.parseInt(buff[1]) + 1) - Integer.parseInt(buff[0])) * 100) + ")";
                 displayField[Integer.parseInt(buff[0])].setText(arg);
                 
@@ -175,14 +173,9 @@ public class AlgoPanel extends JPanel {
                 
                 for(int j = start + 1; j <= end; j++) {
                     displayField[j].setText("                             ");
-                }
-
-                
-            }
-            
-        }
-        
-        
+                }   
+            }   
+        }        
     }
     public int getCluster(int size) {
         int clusterMod = size % 100;
@@ -202,8 +195,6 @@ public class AlgoPanel extends JPanel {
         for(int i = 0; i < 38; i++) {
             if(state[i][1] != null) {
                 if(Integer.parseInt(state[i][0]) == p && !startFound) {
-                    System.out.println("COLOR FOUND");
-                    System.out.println(state[i][1]);
                     temp[0] = i;
                     startFound = true;
                 } else if(Integer.parseInt(state[i][0]) == p) {
@@ -241,7 +232,6 @@ public class AlgoPanel extends JPanel {
         } else {
             //Iterate until i and cluster size is = and all tiles are "FREE"
             for(int i = 0; i <= 37; i++) {
-                //System.out.println(state[i][1]);
                 if(state[i][1] != null) {
                     if(state[i][1].equals("FREE") && !startEnable) {
                         start = i;
@@ -263,7 +253,6 @@ public class AlgoPanel extends JPanel {
                 }
             }
         }
-        System.out.println("INTERVAL FOUND: " + start + " " + end);
         
         //IMPORTANT: used for renderLabel()
         String word = "" + interval[0] + " " + interval[1];
@@ -303,11 +292,10 @@ public class AlgoPanel extends JPanel {
                     comp = -42; //Labels as too big
                 }
             }
-            System.out.println("TESTING COMPS");
+            //IMPORTANT: COMPARING SIZE LEFT OVER IF PLACED
             int min = comps[0];
             int minIndex = 0;
             for(int i = 1; i < freeblocks.size(); i++) {
-                System.out.println(comps);
                 if(comps[i] == 0) {
                     //Access freeblocks entry and set panel accordingly
                     minIndex = i;
@@ -364,12 +352,10 @@ public class AlgoPanel extends JPanel {
                     comp = -42; //Labels as too big
                 }
             }
-            System.out.println("TESTING COMPS");
             //FIXME CHANGE LABELS TO max!!!
             int min = comps[0];
             int minIndex = 0;
             for(int i = 1; i < freeblocks.size(); i++) {
-                System.out.println(comps);
                 if(comps[i] == 0) {
                     //Access freeblocks entry and set panel accordingly
                     minIndex = i;
@@ -400,10 +386,14 @@ public class AlgoPanel extends JPanel {
     }
     int colorRotation = 1;
     public void recvInstr(String arg) {
-        System.out.println(arg);
+        if(arg == null) {
+            renderLabels();
+            return;
+        }
+        
         String temp[] = arg.split(" ");
         if(colorRotation > 12) {
-            colorRotation = 2;
+            colorRotation = 1;
         }
         //Parse first string, remove 'P' and parseInt the rest
         int proc = Integer.parseInt(temp[0].substring(1));
@@ -414,19 +404,14 @@ public class AlgoPanel extends JPanel {
             int[] interval;
             if(this.algorithm.equals("First-Fit")) {
                 interval = ffIndex(size);
-                System.out.println("INTERVAL: " + interval[0] + " " + interval[1]);
-
                 for(int i = interval[0]; i <= interval[1]; i++) {
                     //Change state
                     setPanel(i, proc, colorRotation);
                 }
                 colorRotation++;
                 
-                
             } else if(this.algorithm.equals("Best-Fit")) {
                 interval = bfIndex(size);
-                System.out.println(interval);
-                System.out.println("INTERVAL: " + interval[0] + " " + interval[1]);
 
                 for(int i = interval[0]; i <= interval[1]; i++) {
                     //Change state
@@ -441,16 +426,14 @@ public class AlgoPanel extends JPanel {
                 }
                 colorRotation++;
             }
-            
-
         } else if (temp[1].equals("end")) {
             //Free array elements with matching proc num
             int[] interval;
             //Since regardless of algorithm a process will be removed no
             //if statements are required
-            System.out.println("PROCESS: " + proc);
+            
             interval = getProcInterval(proc);
-            System.out.println(interval[0] + " " + interval[1]);
+            
             //Case for when you are removing only one tile
             if(interval[0] > interval[1]) {
                 freePanel(interval[0]);
@@ -460,11 +443,6 @@ public class AlgoPanel extends JPanel {
                     freePanel(i);
                 }
             }
-
-            
-            
-            
-            
         }
         //Find free regions after placing new process
         findFree();
@@ -475,21 +453,10 @@ public class AlgoPanel extends JPanel {
 
     public void debugInfo() {
         if(this.algorithm.equals("Best-Fit")) {
-            
-            
-            
-            for(int i = 0; i < freeblocks.size(); i++) {
-                System.out.println(freeblocks.get(i));
+            for(int i = 0; i < 38; i++) {
+                System.out.println(""+ state[i][0] + " " + state[i][1]);
             }
-            System.out.println("ALLOC:");
-            for(int i = 0; i < labelpositions.size(); i++) {
-                System.out.println(labelpositions.get(i));
-            }
-            
         }
-        
-        
-        
     }
     //Setters for modifying panel
     public void setPanel(int index, int proc, int colorid) {
@@ -513,7 +480,6 @@ public class AlgoPanel extends JPanel {
             displayField[index].setIcon(colors[0]);
             state[index][1] = colorName[0];
             state[index][0] = "0";
-            
         }
     }
     //Getter for panel color, TEST ME
