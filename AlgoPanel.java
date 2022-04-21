@@ -159,8 +159,8 @@ public class AlgoPanel extends JPanel {
             }
         }
         //FIXME: replace l with labelpositions.size()
-        if(l != 0) {
-            for(int i = 0; i < l; i++) {
+        
+        for(int i = 0; i < labelpositions.size(); i++) {
                 String cmd = labelpositions.get(i);
                 String buff[] = cmd.split(" ");
                 //Size is found by (buff[1]+1) - buff[0]) * 100
@@ -174,8 +174,8 @@ public class AlgoPanel extends JPanel {
                 for(int j = start + 1; j <= end; j++) {
                     displayField[j].setText("                             ");
                 }   
-            }   
-        }        
+        }   
+                
     }
     public int getCluster(int size) {
         int clusterMod = size % 100;
