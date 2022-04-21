@@ -20,7 +20,6 @@ public class MainFrame extends JFrame implements ActionListener{
     String buffer[] = new String[128]; //Dictates instruction for all 3 panels
     int instrSize = 0;
     String path = "C:\\Users\\chase-pc\\Documents\\GitHub\\javaDynMemGUI\\src\\main\\java\\guipackage\\instructions.txt";
-    String filepath = "instructions.txt"; //default value
     public MainFrame() {
         frame = new JFrame("Dynamic Memory Visualization: Made by Chase Johnston");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,14 +114,12 @@ public class MainFrame extends JFrame implements ActionListener{
         for(int i = step_i; i < 124; i++) {
             if(buffer[i] != null) {
                 try {
-                    Thread.sleep(50);
-                    firstFit.recvInstr(buffer[i]);
-                    bestFit.recvInstr(buffer[i]);
-                    worstFit.recvInstr(buffer[i]);
+                    Thread.sleep(100);
+                    
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-                
+                step();
 
             }
             
