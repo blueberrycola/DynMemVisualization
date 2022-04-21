@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -53,8 +54,14 @@ public class MainFrame extends JFrame implements ActionListener{
         mainPanel.add(bestFit);
         mainPanel.add(worstFit);
         
+        JLabel algo = new JLabel();
+        algo.setText("First-Fit                                                                     Best-Fit                                                                                                   Worst-Fit");
+        JPanel algolabel = new JPanel();
+        algolabel.add(algo);
+        frame.add(algolabel, BorderLayout.PAGE_START);
         frame.add(mainPanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.PAGE_END);
+
         frame.setSize(1000, 950);
         frame.setVisible(true);
     }
@@ -108,6 +115,7 @@ public class MainFrame extends JFrame implements ActionListener{
     public void autorun() {
 
         bestFit.debugInfo();
+        bestFit.findFree();
         bestFit.renderLabels();
 
     }

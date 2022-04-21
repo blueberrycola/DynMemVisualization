@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.lang.*;
 public class AlgoPanel extends JPanel {
     JLabel displayField[] = new JLabel[38];
+    ArrayList<String> pendingQ = new ArrayList<String>();
     ImageIcon colors[] = new ImageIcon[17]; //16 Processes + Possiblility of free
     String state[][] = new String[38][2]; //index, 0: procnum, 1:color
     String algorithm; //Variable used to determine how recvInstr will react
@@ -428,6 +429,10 @@ public class AlgoPanel extends JPanel {
                 
             } else if(this.algorithm.equals("Best-Fit")) {
                 interval = bfIndex(size);
+                //COPY PASTA THIS FOR EACH ALGO **
+                if(interval[0] == -1 && interval[1] == -1) {
+
+                }
 
                 for(int i = interval[0]; i <= interval[1]; i++) {
                     //Change state
